@@ -22,9 +22,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
     compile 'com.android.support:appcompat-v7:21.0.2'
+
+    compile 'com.jakewharton:butterknife:6.0.0'
+
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.0.0'
+
+    compile 'com.squareup.retrofit:retrofit:1.8.0'
+
+    // TODO: in libs untill 0.9 is released!
+    // compile('com.squareup.flow:flow:0.9')
 }
