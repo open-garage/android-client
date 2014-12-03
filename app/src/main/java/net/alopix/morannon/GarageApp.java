@@ -35,11 +35,8 @@ public class GarageApp extends Application {
     }
 
     private void createApiService() {
-        final SharedPreferences prefs = getPreferences();
-        final String endpoint = prefs.getString(API_ENDPOINT_KEY, Config.API_ENDPOINT);
-
         RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(endpoint)
+                .setEndpoint(getApiServiceEndpoint())
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
                 .build();
         mApiService = adapter.create(OpenGarageApi.class);
@@ -51,6 +48,10 @@ public class GarageApp extends Application {
 
     public OpenGarageApi getApiService() {
         return mApiService;
+    }
+
+    public String getApiServiceEndpoint() {
+        return getPreferences().getString(API_ENDPOINT_KEY, Config.API_ENDPOINT);
     }
 
     public void updateApiServiceEndpoint(String endpoint) {
