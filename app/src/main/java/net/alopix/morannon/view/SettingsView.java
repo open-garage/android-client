@@ -1,3 +1,10 @@
+/*
+ * OpenGarage
+ *
+ * Created by Dustin Steiner on 3.12.2014.
+ * Copyright (c) 2014 Dustin Steiner. All rights reserved.
+ */
+
 package net.alopix.morannon.view;
 
 import android.content.Context;
@@ -24,7 +31,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Created by P40809 on 03.12.2014.
+ * Created by dustin on 03.12.2014.
  */
 public class SettingsView extends FrameLayout implements OnItemClickListener {
     private static final String TAG = SettingsView.class.getSimpleName();

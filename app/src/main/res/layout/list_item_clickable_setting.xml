@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ OpenGarage
+  ~
+  ~ Created by Dustin Steiner on 3.12.2014.
+  ~ Copyright (c) 2014 Dustin Steiner. All rights reserved.
+  -->
+
 <com.andexert.library.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
                                  xmlns:app="http://schemas.android.com/apk/res-auto"
                                  android:layout_width="match_parent"

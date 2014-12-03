@@ -1,3 +1,10 @@
+/*
+ * OpenGarage
+ *
+ * Created by Dustin Steiner on 3.12.2014.
+ * Copyright (c) 2014 Dustin Steiner. All rights reserved.
+ */
+
 package net.alopix.morannon.adapter;
 
 import android.support.v7.widget.RecyclerView;
@@ -76,7 +83,7 @@ public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, Se
             if (getItemViewType() == TYPE_DEFAULT) {
                 return;
             }
-            
+
             mAdapter.notifyItemClicked(v, getPosition());
         }
     }
