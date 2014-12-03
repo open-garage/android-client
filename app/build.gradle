@@ -46,4 +46,6 @@ dependencies {
 
     // TODO: in libs untill 0.9 is released!
     // compile('com.squareup.flow:flow:0.9')
+
+    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 }

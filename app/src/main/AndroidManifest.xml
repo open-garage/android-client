@@ -9,7 +9,9 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme"
         android:name=".GarageApp">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
