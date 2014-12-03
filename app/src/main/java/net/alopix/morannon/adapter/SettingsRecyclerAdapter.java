@@ -11,12 +11,14 @@ import net.alopix.morannon.model.SettingItem;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 
 /**
  * Created by dustin on 03.12.2014.
  */
 public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, SettingsRecyclerAdapter.ViewHolder> {
+    private static final int TYPE_CLICKABLE = 0;
+    private static final int TYPE_DEFAULT = 1;
+
     private OnItemClickListener mOnItemClickListener;
 
     public OnItemClickListener getOnItemClickListener() {
@@ -34,8 +36,13 @@ public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, Se
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return getItem(position).isClickable() ? TYPE_CLICKABLE : TYPE_DEFAULT;
+    }
+
+    @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item_setting, viewGroup, false);
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(getItemViewType(i) == TYPE_DEFAULT ? R.layout.list_item_setting : R.layout.list_item_clickable_setting, viewGroup, false);
         return new ViewHolder(view, this);
     }
 
@@ -66,6 +73,10 @@ public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, Se
 
         @Override
         public void onClick(View v) {
+            if (getItemViewType() == TYPE_DEFAULT) {
+                return;
+            }
+            
             mAdapter.notifyItemClicked(v, getPosition());
         }
     }

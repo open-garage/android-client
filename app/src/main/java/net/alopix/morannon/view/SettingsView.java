@@ -42,7 +42,7 @@ public class SettingsView extends FrameLayout implements OnItemClickListener {
         mAdapter = new SettingsRecyclerAdapter();
         mAdapter.setOnItemClickListener(this);
 
-        mAdapter.add(new SettingItem("Open Garage Server URL", ((GarageApp) context.getApplicationContext()).getApiServiceEndpoint()));
+        mAdapter.add(new SettingItem("Open Garage Server URL", ((GarageApp) context.getApplicationContext()).getApiServiceEndpoint(), true));
         mAdapter.add(mServerNameSetting);
         mAdapter.add(mServerVersionSetting);
         mAdapter.add(new SettingItem("App Version", String.format("v%s (Release %d)", AppUtil.getVersionName(context), AppUtil.getVersion(context))));
@@ -83,10 +83,6 @@ public class SettingsView extends FrameLayout implements OnItemClickListener {
 
     @Override
     public void onItemClicked(View view, int position) {
-        if (position != 0) {
-            return;
-        }
-
         // TODO: open input
     }
 }
