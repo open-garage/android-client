@@ -27,4 +27,8 @@ public interface OpenGarageApi {
 
     @POST(BASE_PATH + "/toggle")
     void toggle(@Body ToggleRequest request, Callback<ToggleResponse> cb);
+
+
+    @POST(BASE_PATH + "/toggle")
+    ToggleResponse toggleSync(@Body ToggleRequest request);
 }

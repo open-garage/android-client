@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ OpenGarage
+  ~
+  ~ Created by Dustin Steiner on 4.12.2014.
+  ~ Copyright (c) 2014 Dustin Steiner. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/toggle_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/title_container"
+        android:layout_marginTop="-15dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/appwidget_toggle_door_idle"/>
+
+    <LinearLayout
+        android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/title_container_bg">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_margin="6dp"
+            android:text="@string/app_name"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+        <ProgressBar
+            android:id="@+id/progress_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="6dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="invisible"
+            style="?android:progressBarStyleSmall"
+            tools:visibility="visible"/>
+    </LinearLayout>
+</RelativeLayout>

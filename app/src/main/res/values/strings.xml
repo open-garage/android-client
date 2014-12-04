@@ -14,5 +14,10 @@
     <string name="toggle_door_complete">Success</string>
     <string name="toggle_door_error">Error</string>
 
+    <string name="appwidget_toggle_door_idle">Open/Close</string>
+    <string name="appwidget_toggle_door_complete">Success!</string>
+    <string name="appwidget_toggle_door_error">Error :(</string>
+    <string name="appwidget_toggle_door_loading">Loading...</string>
+
     <string name="title_settings">Settings</string>
 </resources>
