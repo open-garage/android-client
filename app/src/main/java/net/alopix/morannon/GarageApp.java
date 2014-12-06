@@ -17,8 +17,11 @@ import com.squareup.okhttp.OkHttpClient;
 import net.alopix.morannon.api.v1.OpenGarageApi;
 import net.alopix.morannon.service.GarageService;
 import net.alopix.morannon.util.FlowBundler;
+import net.alopix.util.SelfSignedCertHelper;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLSocketFactory;
 
 import flow.Backstack;
 import retrofit.RestAdapter;
@@ -50,16 +53,25 @@ public class GarageApp extends Application {
     }
 
     private void createApiService() {
-        OkHttpClient httpClient = new OkHttpClient();
-        httpClient.setConnectTimeout(HTTP_TIMEOUT, TimeUnit.SECONDS);
-        httpClient.setReadTimeout(HTTP_TIMEOUT, TimeUnit.SECONDS);
+        OkHttpClient client = configureClient();
 
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(getApiServiceEndpoint())
-                .setClient(new OkClient(httpClient))
+                .setClient(new OkClient(client))
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
                 .build();
         mApiService = adapter.create(OpenGarageApi.class);
+    }
+
+    private OkHttpClient configureClient() {
+        OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(HTTP_TIMEOUT, TimeUnit.SECONDS);
+        client.setReadTimeout(HTTP_TIMEOUT, TimeUnit.SECONDS);
+        SSLSocketFactory sslSocketFactory = SelfSignedCertHelper.getPinnedCertSslSocketFactory(getResources().openRawResource(R.raw.skynet), Config.TRUST_STORE_PASSWORD);
+        if (sslSocketFactory != null) {
+            client.setSslSocketFactory(sslSocketFactory);
+        }
+        return client;
     }
 
     public FlowBundler getFlowBundler() {
