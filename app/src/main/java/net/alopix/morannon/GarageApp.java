@@ -28,7 +28,7 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 /**
- * Created by P40809 on 01.12.2014.
+ * Created by dustin on 01.12.2014.
  */
 public class GarageApp extends Application {
     private static final String API_ENDPOINT_KEY = "api_endpoint_key";

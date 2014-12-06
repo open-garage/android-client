@@ -12,7 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 /**
- * Created by P40809 on 03.12.2014.
+ * Created by dustin on 03.12.2014.
  */
 public final class AppUtil {
     public static int getVersion(Context context) {

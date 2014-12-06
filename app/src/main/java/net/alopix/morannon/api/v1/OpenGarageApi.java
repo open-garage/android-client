@@ -17,7 +17,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 
 /**
- * Created by P40809 on 01.12.2014.
+ * Created by dustin on 01.12.2014.
  */
 public interface OpenGarageApi {
     static final String BASE_PATH = "/api/v1";

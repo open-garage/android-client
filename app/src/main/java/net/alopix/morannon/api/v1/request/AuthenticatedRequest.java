@@ -10,7 +10,7 @@ package net.alopix.morannon.api.v1.request;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by P40809 on 01.12.2014.
+ * Created by dustin on 01.12.2014.
  */
 public class AuthenticatedRequest {
     @SerializedName("token")

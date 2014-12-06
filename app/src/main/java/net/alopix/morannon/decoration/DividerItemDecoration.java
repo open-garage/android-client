@@ -22,7 +22,6 @@ import android.view.View;
  *         https://gist.github.com/fatfingers/233abbae200b5e87297b
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
-
     private Drawable mDivider;
 
     public DividerItemDecoration(Context context, AttributeSet attrs) {

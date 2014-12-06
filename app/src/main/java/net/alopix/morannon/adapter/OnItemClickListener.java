@@ -9,6 +9,9 @@ package net.alopix.morannon.adapter;
 
 import android.view.View;
 
+/**
+ * Created by dustin on 01.12.2014.
+ */
 public interface OnItemClickListener {
-	void onItemClicked(View view, int position);
+    void onItemClicked(View view, int position);
 }

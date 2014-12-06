@@ -25,7 +25,7 @@ import flow.Path;
 import flow.PathContainerView;
 
 /**
- * Created by P40809 on 01.12.2014.
+ * Created by dustin on 01.12.2014.
  */
 public class MainActivity extends ActionBarActivity implements Flow.Dispatcher {
     private static final String TAG = MainActivity.class.getSimpleName();
