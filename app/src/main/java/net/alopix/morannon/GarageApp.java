@@ -14,13 +14,15 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
-import net.alopix.morannon.api.v1.OpenGarageApi;
+import net.alopix.morannon.api.v1.OpenGarageService;
 import net.alopix.morannon.service.GarageService;
 import net.alopix.morannon.util.FlowBundler;
 import net.alopix.util.SelfSignedCertHelper;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 
 import flow.Backstack;
@@ -32,6 +34,9 @@ import retrofit.client.OkClient;
  */
 public class GarageApp extends Application {
     private static final String API_ENDPOINT_KEY = "api_endpoint_key";
+    private static final String API_TOKEN_KEY = "api_token_key";
+
+    private static final String CURRENT_PROGRESS_KEY = "current_progress_key";
     private static final String CURRENT_STATUS_KEY = "current_status_key";
 
     private static final int HTTP_TIMEOUT = 15;
@@ -43,7 +48,8 @@ public class GarageApp extends Application {
         }
     };
 
-    private OpenGarageApi mApiService;
+    private OpenGarageService mApiService;
+    private String mApiToken;
 
     @Override
     public void onCreate() {
@@ -52,15 +58,20 @@ public class GarageApp extends Application {
         createApiService();
     }
 
-    private void createApiService() {
+    public OpenGarageService createApiService(String endpoint) {
         OkHttpClient client = configureClient();
 
         RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(getApiServiceEndpoint())
+                .setEndpoint(endpoint)
                 .setClient(new OkClient(client))
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
                 .build();
-        mApiService = adapter.create(OpenGarageApi.class);
+        return adapter.create(OpenGarageService.class);
+    }
+
+    private void createApiService() {
+        mApiService = createApiService(getApiServiceEndpoint());
+        mApiToken = getPreferences().getString(API_TOKEN_KEY, Config.API_TOKEN);
     }
 
     private OkHttpClient configureClient() {
@@ -71,6 +82,12 @@ public class GarageApp extends Application {
         if (sslSocketFactory != null) {
             client.setSslSocketFactory(sslSocketFactory);
         }
+        client.setHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
         return client;
     }
 
@@ -78,7 +95,7 @@ public class GarageApp extends Application {
         return mFlowBundler;
     }
 
-    public OpenGarageApi getApiService() {
+    public OpenGarageService getApiService() {
         return mApiService;
     }
 
@@ -86,19 +103,34 @@ public class GarageApp extends Application {
         return getPreferences().getString(API_ENDPOINT_KEY, Config.API_ENDPOINT);
     }
 
-    public void updateApiServiceEndpoint(String endpoint) {
+    public void updateApiServiceEndpoint(String endpoint, String token) {
         final SharedPreferences prefs = getPreferences();
-        prefs.edit().putString(API_ENDPOINT_KEY, endpoint).apply();
+        prefs.edit()
+                .putString(API_ENDPOINT_KEY, endpoint)
+                .putString(API_TOKEN_KEY, token)
+                .apply();
 
         createApiService();
     }
 
+    public String getApiToken() {
+        return mApiToken;
+    }
+
     public int getCurrentStatus() {
-        return getPreferences().getInt(CURRENT_STATUS_KEY, GarageService.STATUS_IDLE);
+        return getPreferences().getInt(CURRENT_STATUS_KEY, GarageService.PROGRESS_IDLE);
     }
 
     public void setCurrentStatus(int status) {
         getPreferences().edit().putInt(CURRENT_STATUS_KEY, status).apply();
+    }
+
+    public int getCurrentProgress() {
+        return getPreferences().getInt(CURRENT_PROGRESS_KEY, GarageService.PROGRESS_IDLE);
+    }
+
+    public void setCurrentProgress(int progress) {
+        getPreferences().edit().putInt(CURRENT_PROGRESS_KEY, progress).apply();
     }
 
     private SharedPreferences getPreferences() {

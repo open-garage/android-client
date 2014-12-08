@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -25,12 +26,18 @@ import net.alopix.morannon.GarageApp;
 import net.alopix.morannon.HandlesOptionsMenu;
 import net.alopix.morannon.Paths;
 import net.alopix.morannon.R;
+import net.alopix.morannon.api.v1.OpenGarageService;
+import net.alopix.morannon.api.v1.request.DoorStatusRequest;
+import net.alopix.morannon.api.v1.response.DoorStatusResponse;
 import net.alopix.morannon.service.GarageService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import flow.Flow;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by dustin on 03.12.2014.
@@ -53,7 +60,14 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GarageService.ACTION_TOGGLE_GARAGE_STATUS)) {
-                mToggleButton.setProgress(intent.getIntExtra(GarageService.EXTRA_STATUS, 0));
+                if (intent.hasExtra(GarageService.EXTRA_STATUS)) {
+                    int status = intent.getIntExtra(GarageService.EXTRA_STATUS, OpenGarageService.STATUS_ERROR);
+                    mToggleButton.setIdleText(getIdleString(status));
+                }
+                if (intent.hasExtra(GarageService.EXTRA_PROGRESS)) {
+                    int progress = intent.getIntExtra(GarageService.EXTRA_PROGRESS, GarageService.PROGRESS_IDLE);
+                    mToggleButton.setProgress(progress);
+                }
             }
         }
     };
@@ -75,9 +89,40 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
+        ((GarageApp) getContext().getApplicationContext()).getApiService().toggle(new DoorStatusRequest(((GarageApp) getContext().getApplicationContext()).getApiToken()), new Callback<DoorStatusResponse>() {
+            @Override
+            public void success(DoorStatusResponse toggleResponse, Response response) {
+                mToggleButton.setIdleText(getIdleString(toggleResponse.getStatus()));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                mToggleButton.setIdleText(getIdleString(OpenGarageService.STATUS_ERROR));
+                startButtonReset();
+            }
+        });
+
         mToggleButton.setIndeterminateProgressMode(true);
 
-        mToggleButton.setProgress(((GarageApp) getContext().getApplicationContext()).getCurrentStatus());
+        mToggleButton.setProgress(((GarageApp) getContext().getApplicationContext()).getCurrentProgress());
+    }
+
+    @StringRes
+    private int getIdleStringRes(int status) {
+        switch (status) {
+            case OpenGarageService.DOOR_OPEN:
+                return R.string.toggle_door_idle_close;
+
+            case OpenGarageService.DOOR_CLOSED:
+                return R.string.toggle_door_idle_open;
+
+            default:
+                return R.string.toggle_door_idle;
+        }
+    }
+
+    private String getIdleString(@StringRes int status) {
+        return getContext().getString(getIdleStringRes(status));
     }
 
     @Override
@@ -101,23 +146,6 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
         mToggleButton.setProgress(0);
         Intent serviceIntent = new Intent(getContext(), GarageService.class);
         getContext().startService(serviceIntent);
-//
-//        mToggleButton.setProgress(50);
-//        ((GarageApp) getContext().getApplicationContext()).getApiService().toggle(new ToggleRequest(), new Callback<ToggleResponse>() {
-//            @Override
-//            public void success(ToggleResponse toggleResponse, Response response) {
-//                Log.d(TAG, "Toggle Open Garage System!");
-//                mToggleButton.setProgress(100);
-//                startButtonReset();
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.d(TAG, "Toggle Garage System (ERROR)!");
-//                mToggleButton.setProgress(-1);
-//                startButtonReset();
-//            }
-//        });
     }
 
     private void removeButtonResetHandler() {

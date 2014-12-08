@@ -16,14 +16,11 @@ public class AuthenticatedRequest {
     @SerializedName("token")
     private String mToken;
 
-    public AuthenticatedRequest() {
+    public AuthenticatedRequest(String token) {
+        mToken = token;
     }
 
     public String getToken() {
         return mToken;
-    }
-
-    public void setToken(String mToken) {
-        this.mToken = mToken;
     }
 }

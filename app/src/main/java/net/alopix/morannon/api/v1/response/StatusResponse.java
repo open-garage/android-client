@@ -9,21 +9,23 @@ package net.alopix.morannon.api.v1.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.alopix.morannon.api.v1.OpenGarageService;
+
 /**
  * Created by dustin on 01.12.2014.
  */
 public abstract class StatusResponse {
-    @SerializedName("error")
-    private int mError;
+    @SerializedName("status")
+    private int mStatus;
 
     public StatusResponse() {
     }
 
-    public int getError() {
-        return mError;
+    public int getStatus() {
+        return mStatus;
     }
 
     public boolean isSuccess() {
-        return mError == 0;
+        return mStatus != OpenGarageService.STATUS_ERROR;
     }
 }

@@ -10,10 +10,14 @@
 
     <string name="title_toggle">Open Garage</string>
     <string name="action_settings">Settings</string>
+    <string name="toggle_door_idle_open">Open Garage Door</string>
+    <string name="toggle_door_idle_close">Close Garage Door</string>
     <string name="toggle_door_idle">Toggle Garage Door</string>
     <string name="toggle_door_complete">Success</string>
     <string name="toggle_door_error">Error</string>
 
+    <string name="appwidget_toggle_door_idle_open">Open Door</string>
+    <string name="appwidget_toggle_door_idle_close">Close Door</string>
     <string name="appwidget_toggle_door_idle">Open/Close</string>
     <string name="appwidget_toggle_door_complete">Success!</string>
     <string name="appwidget_toggle_door_error">Error :(</string>
