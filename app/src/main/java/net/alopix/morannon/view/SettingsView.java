@@ -22,6 +22,10 @@ import net.alopix.morannon.adapter.SettingsRecyclerAdapter;
 import net.alopix.morannon.api.v1.response.SystemInfosResponse;
 import net.alopix.morannon.decoration.DividerItemDecoration;
 import net.alopix.morannon.model.SettingItem;
+import net.alopix.morannon.popup.PopupResult;
+import net.alopix.morannon.popup.SettingsInput;
+import net.alopix.morannon.popup.SettingsInputPopup;
+import net.alopix.morannon.popup.SettingsInputResult;
 import net.alopix.morannon.util.AppUtil;
 
 import butterknife.ButterKnife;
@@ -33,8 +37,10 @@ import retrofit.client.Response;
 /**
  * Created by dustin on 03.12.2014.
  */
-public class SettingsView extends FrameLayout implements OnItemClickListener {
+public class SettingsView extends FrameLayout implements OnItemClickListener, PopupResult<SettingsInput, SettingsInputResult> {
     private static final String TAG = SettingsView.class.getSimpleName();
+
+    private SettingsInputPopup mInputPopup;
 
     private SettingItem mServerNameSetting = new SettingItem("Server Name", "?");
     private SettingItem mServerVersionSetting = new SettingItem("Server Version", "?");
@@ -53,6 +59,8 @@ public class SettingsView extends FrameLayout implements OnItemClickListener {
         mAdapter.add(mServerNameSetting);
         mAdapter.add(mServerVersionSetting);
         mAdapter.add(new SettingItem("App Version", String.format("v%s (build %d)", AppUtil.getVersionName(context), AppUtil.getVersion(context))));
+
+        mInputPopup = new SettingsInputPopup(context);
     }
 
     @Override
@@ -90,6 +98,23 @@ public class SettingsView extends FrameLayout implements OnItemClickListener {
 
     @Override
     public void onItemClicked(View view, int position) {
-        // TODO: open input
+        SettingItem item = mAdapter.getItem(position);
+
+        if (position == 0) {
+            GarageApp app = (GarageApp) getContext().getApplicationContext();
+            mInputPopup.show(new SettingsInput(position, app.getApiServiceEndpoint(), app.getApiToken()), this);
+        }
+    }
+
+    @Override
+    public void onPopupResult(SettingsInput settingsInput, SettingsInputResult result) {
+        if (result != null) {
+            SettingItem item = mAdapter.getItem(settingsInput.id);
+            if (settingsInput.id == 0) {
+                ((GarageApp) getContext().getApplicationContext()).updateApiServiceEndpoint(result.url, result.token);
+            }
+            item.setDescription(result.url);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }
