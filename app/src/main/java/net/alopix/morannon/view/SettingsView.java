@@ -52,7 +52,7 @@ public class SettingsView extends FrameLayout implements OnItemClickListener {
         mAdapter.add(new SettingItem("Open Garage Server URL", ((GarageApp) context.getApplicationContext()).getApiServiceEndpoint(), true));
         mAdapter.add(mServerNameSetting);
         mAdapter.add(mServerVersionSetting);
-        mAdapter.add(new SettingItem("App Version", String.format("v%s (Release %d)", AppUtil.getVersionName(context), AppUtil.getVersion(context))));
+        mAdapter.add(new SettingItem("App Version", String.format("v%s (build %d)", AppUtil.getVersionName(context), AppUtil.getVersion(context))));
     }
 
     @Override
