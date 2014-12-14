@@ -32,14 +32,14 @@ public interface OpenGarageService {
     void systemInfos(Callback<SystemInfosResponse> cb);
 
     @POST(BASE_PATH + "/toggle")
-    void toggle(@Body DoorStatusRequest request, Callback<DoorStatusResponse> cb);
+    void toggle(@Body ToggleRequest request, Callback<DoorStatusResponse> cb);
 
 
     @POST(BASE_PATH + "/toggle")
     ToggleResponse toggleSync(@Body ToggleRequest request);
 
     @POST(BASE_PATH + "/status")
-    void doorStatusSync(@Body DoorStatusRequest request, Callback<DoorStatusResponse> cb);
+    void doorStatus(@Body DoorStatusRequest request, Callback<DoorStatusResponse> cb);
 
     @POST(BASE_PATH + "/status")
     DoorStatusResponse doorStatusSync(@Body DoorStatusRequest request);

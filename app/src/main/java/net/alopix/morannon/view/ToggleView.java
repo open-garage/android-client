@@ -89,7 +89,7 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
-        ((GarageApp) getContext().getApplicationContext()).getApiService().toggle(new DoorStatusRequest(((GarageApp) getContext().getApplicationContext()).getApiToken()), new Callback<DoorStatusResponse>() {
+        ((GarageApp) getContext().getApplicationContext()).getApiService().doorStatus(new DoorStatusRequest(((GarageApp) getContext().getApplicationContext()).getApiToken()), new Callback<DoorStatusResponse>() {
             @Override
             public void success(DoorStatusResponse toggleResponse, Response response) {
                 mToggleButton.setIdleText(getIdleString(toggleResponse.getStatus()));
