@@ -12,6 +12,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -56,6 +57,7 @@ public class SettingsInputPopup {
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setCancelable(true);
         mDialog.setCanceledOnTouchOutside(false);
+        mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         View view = LayoutInflater.from(mContext).inflate(R.layout.popup_settings_input, null, false);
         ButterKnife.inject(this, view);
         mDialog.setContentView(view);
