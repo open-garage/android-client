@@ -78,7 +78,9 @@ public class SettingsInputPopup {
     }
 
     private void updateContent() {
-        mValueInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        if (mInfo.isNumber) {
+            mValueInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
 
         mTitleLabel.setText(mInfo.title);
         mValueInput.setText(mInfo.value);
