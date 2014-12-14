@@ -7,11 +7,20 @@
 
 package net.alopix.morannon.api.v1.request;
 
+import com.google.gson.annotations.SerializedName;
+
+import net.alopix.morannon.BuildConfig;
+
 /**
  * Created by dustin on 01.12.2014.
  */
 public class ToggleRequest extends AuthenticatedRequest {
+    @SerializedName("debug")
+    private int mDebug;
+
     public ToggleRequest(String token) {
         super(token);
+
+        mDebug = BuildConfig.DEBUG ? 1 : 0;
     }
 }
