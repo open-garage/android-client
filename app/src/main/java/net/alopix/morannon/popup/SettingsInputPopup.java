@@ -9,6 +9,7 @@ package net.alopix.morannon.popup;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -77,6 +78,8 @@ public class SettingsInputPopup {
     }
 
     private void updateContent() {
+        mValueInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         mTitleLabel.setText(mInfo.title);
         mValueInput.setText(mInfo.value);
     }
