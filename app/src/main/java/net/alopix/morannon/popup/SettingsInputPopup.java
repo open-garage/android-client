@@ -13,17 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import net.alopix.morannon.GarageApp;
 import net.alopix.morannon.R;
-import net.alopix.morannon.api.v1.response.SystemInfosResponse;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by dustin on 08/12/14.
@@ -35,10 +31,10 @@ public class SettingsInputPopup {
     private PopupResult<SettingsInput, SettingsInputResult> mPresenter;
     private Dialog mDialog;
 
-    @InjectView(R.id.url_input)
-    EditText mUrlInput;
-    @InjectView(R.id.token_input)
-    EditText mTokenInput;
+    @InjectView(R.id.title_label)
+    TextView mTitleLabel;
+    @InjectView(R.id.value_input)
+    EditText mValueInput;
 
     public SettingsInputPopup(Context context) {
         mContext = context;
@@ -79,8 +75,8 @@ public class SettingsInputPopup {
     }
 
     private void updateContent() {
-        mUrlInput.setText(mInfo.url);
-        mTokenInput.setText(mInfo.token);
+        mTitleLabel.setText(mInfo.title);
+        mValueInput.setText(mInfo.value);
     }
 
     @OnClick(R.id.cancel_button)
@@ -91,24 +87,8 @@ public class SettingsInputPopup {
 
     @OnClick(R.id.save_button)
     void onSaveClicked() {
-        final String newUrl = mUrlInput.getText().toString();
-        final String newToken = mTokenInput.getText().toString();
-        // TODO: loading start
-
-        ((GarageApp) mContext.getApplicationContext()).createApiService(newUrl)
-                .systemInfos(new Callback<SystemInfosResponse>() {
-                    @Override
-                    public void success(SystemInfosResponse systemInfosResponse, Response response) {
-                        mPresenter.onPopupResult(mInfo, new SettingsInputResult(newUrl, newToken));
-                        dismiss();
-                        // TODO: loading end
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        // TODO: show error!
-                        // TODO: loading end
-                    }
-                });
+        final String newValue = mValueInput.getText().toString();
+        mPresenter.onPopupResult(mInfo, new SettingsInputResult(newValue));
+        dismiss();
     }
 }

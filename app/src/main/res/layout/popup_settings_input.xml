@@ -6,33 +6,27 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minWidth="300dp"
-    android:orientation="vertical"
-    android:padding="16sp">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:minWidth="300dp"
+              android:orientation="vertical"
+              android:padding="16sp">
 
     <TextView
+        android:id="@+id/title_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Open Garage Server Config"
-        style="@style/TextAppearance.AppCompat.Headline" />
+        tools:text="Server Url"
+        style="@style/TextAppearance.AppCompat.Headline"/>
 
     <EditText
-        android:id="@+id/url_input"
+        android:id="@+id/value_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter server URL"
         android:singleLine="true"
-        style="@style/Widget.AppCompat.EditText" />
-
-    <EditText
-        android:id="@+id/token_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter server auth token"
-        android:singleLine="true"
-        style="@style/Widget.AppCompat.EditText" />
+        tools:text="Server Url"
+        style="@style/Widget.AppCompat.EditText"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -45,13 +39,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            style="@style/Widget.AppCompat.ActionButton" />
+            style="@style/Widget.AppCompat.ActionButton"/>
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
-            style="@style/Widget.AppCompat.ActionButton" />
+            style="@style/Widget.AppCompat.ActionButton"/>
     </LinearLayout>
 </LinearLayout>

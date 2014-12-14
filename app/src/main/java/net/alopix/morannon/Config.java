@@ -11,10 +11,7 @@ package net.alopix.morannon;
  * Created by dustin on 01.12.2014.
  */
 public final class Config {
-    public static final String API_ENDPOINT = "https://192.168.0.165:8000";
-    public static final String API_TOKEN = "A";
-
-    public static final String TRUST_STORE_PASSWORD = "";
+    public static final String TRUST_STORE_PASSWORD = "empty";
 
     private Config() {
     }

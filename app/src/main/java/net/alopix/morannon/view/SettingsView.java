@@ -15,12 +15,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import net.alopix.morannon.BuildConfig;
 import net.alopix.morannon.GarageApp;
 import net.alopix.morannon.R;
 import net.alopix.morannon.adapter.OnItemClickListener;
 import net.alopix.morannon.adapter.SettingsRecyclerAdapter;
 import net.alopix.morannon.api.v1.response.SystemInfosResponse;
 import net.alopix.morannon.decoration.DividerItemDecoration;
+import net.alopix.morannon.model.ClickableSettingItem;
+import net.alopix.morannon.model.InputSettingItem;
 import net.alopix.morannon.model.SettingItem;
 import net.alopix.morannon.popup.PopupResult;
 import net.alopix.morannon.popup.SettingsInput;
@@ -37,11 +40,14 @@ import retrofit.client.Response;
 /**
  * Created by dustin on 03.12.2014.
  */
-public class SettingsView extends FrameLayout implements OnItemClickListener, PopupResult<SettingsInput, SettingsInputResult> {
+public class SettingsView extends FrameLayout implements OnItemClickListener {
     private static final String TAG = SettingsView.class.getSimpleName();
 
     private SettingsInputPopup mInputPopup;
 
+    private SettingItem mServerHostSetting = new ServerHostSettingItem();
+    private SettingItem mServerPortSetting = new ServerPortSettingItem();
+    private SettingItem mApiTokenSetting = new ApiTokenSettingItem();
     private SettingItem mServerNameSetting = new SettingItem("Server Name", "?");
     private SettingItem mServerVersionSetting = new SettingItem("Server Version", "?");
 
@@ -55,10 +61,18 @@ public class SettingsView extends FrameLayout implements OnItemClickListener, Po
         mAdapter = new SettingsRecyclerAdapter();
         mAdapter.setOnItemClickListener(this);
 
-        mAdapter.add(new SettingItem("Open Garage Server URL", ((GarageApp) context.getApplicationContext()).getApiServiceEndpoint(), true));
+        GarageApp app = (GarageApp) context.getApplicationContext();
+
+        mServerHostSetting.setDescription(app.getApiServerHost());
+        mServerPortSetting.setDescription(String.valueOf(app.getApiServerPort()));
+        mApiTokenSetting.setDescription(app.getApiToken());
+
+        mAdapter.add(mServerHostSetting);
+        mAdapter.add(mServerPortSetting);
+        mAdapter.add(mApiTokenSetting);
         mAdapter.add(mServerNameSetting);
         mAdapter.add(mServerVersionSetting);
-        mAdapter.add(new SettingItem("App Version", String.format("v%s (build %d)", AppUtil.getVersionName(context), AppUtil.getVersion(context))));
+        mAdapter.add(new SettingItem("App Version", String.format("v%s (build %d%s)", AppUtil.getVersionName(context), AppUtil.getVersion(context), BuildConfig.DEBUG ? " - Debug Mode" : "")));
 
         mInputPopup = new SettingsInputPopup(context);
     }
@@ -100,21 +114,72 @@ public class SettingsView extends FrameLayout implements OnItemClickListener, Po
     public void onItemClicked(View view, int position) {
         SettingItem item = mAdapter.getItem(position);
 
-        if (position == 0) {
-            GarageApp app = (GarageApp) getContext().getApplicationContext();
-            mInputPopup.show(new SettingsInput(position, app.getApiServiceEndpoint(), app.getApiToken()), this);
+        if (item instanceof ClickableSettingItem) {
+            ((ClickableSettingItem) item).onClicked(position);
         }
     }
 
-    @Override
-    public void onPopupResult(SettingsInput settingsInput, SettingsInputResult result) {
-        if (result != null) {
-            SettingItem item = mAdapter.getItem(settingsInput.id);
-            if (settingsInput.id == 0) {
-                ((GarageApp) getContext().getApplicationContext()).updateApiServiceEndpoint(result.url, result.token);
+    private class ServerHostSettingItem extends InputSettingItem implements PopupResult<SettingsInput, SettingsInputResult> {
+        public ServerHostSettingItem() {
+            super("Server Host", "");
+        }
+
+        @Override
+        public void onClicked(int position) {
+            mInputPopup.show(new SettingsInput(getTitle(), getDescription()), this);
+        }
+
+        @Override
+        public void onPopupResult(SettingsInput settingsInput, SettingsInputResult result) {
+            if (result != null) {
+                ((GarageApp) getContext().getApplicationContext()).setApiServerHost(result.value);
+                setDescription(result.value);
+                mAdapter.notifyDataSetChanged();
+
+                loadServerInfo();
             }
-            item.setDescription(result.url);
-            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class ServerPortSettingItem extends InputSettingItem implements PopupResult<SettingsInput, SettingsInputResult> {
+        public ServerPortSettingItem() {
+            super("Server Port", "");
+        }
+
+        @Override
+        public void onClicked(int position) {
+            mInputPopup.show(new SettingsInput(getTitle(), getDescription(), true), this);
+        }
+
+        @Override
+        public void onPopupResult(SettingsInput settingsInput, SettingsInputResult result) {
+            if (result != null) {
+                ((GarageApp) getContext().getApplicationContext()).setApiServerPort(Integer.parseInt(result.value));
+                setDescription(result.value);
+                mAdapter.notifyDataSetChanged();
+
+                loadServerInfo();
+            }
+        }
+    }
+
+    private class ApiTokenSettingItem extends InputSettingItem implements PopupResult<SettingsInput, SettingsInputResult> {
+        public ApiTokenSettingItem() {
+            super("Api Token", "");
+        }
+
+        @Override
+        public void onClicked(int position) {
+            mInputPopup.show(new SettingsInput(getTitle(), getDescription()), this);
+        }
+
+        @Override
+        public void onPopupResult(SettingsInput settingsInput, SettingsInputResult result) {
+            if (result != null) {
+                ((GarageApp) getContext().getApplicationContext()).setApiToken(result.value);
+                setDescription(result.value);
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

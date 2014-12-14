@@ -33,8 +33,13 @@ import retrofit.client.OkClient;
  * Created by dustin on 01.12.2014.
  */
 public class GarageApp extends Application {
-    private static final String API_ENDPOINT_KEY = "api_endpoint_key";
+    private static final String API_SERVER_HOST_KEY = "api_server_host_key";
+    private static final String API_SERVER_PORT_KEY = "api_server_port_key";
     private static final String API_TOKEN_KEY = "api_token_key";
+
+    private static final String DEFAULT_SERVER_HOST = "localhost";
+    private static final int DEFAULT_SERVER_PORT = 8000;
+    private static final String DEFAULT_API_TOKEN = "A";
 
     private static final String CURRENT_PROGRESS_KEY = "current_progress_key";
     private static final String CURRENT_STATUS_KEY = "current_status_key";
@@ -49,7 +54,6 @@ public class GarageApp extends Application {
     };
 
     private OpenGarageService mApiService;
-    private String mApiToken;
 
     @Override
     public void onCreate() {
@@ -70,8 +74,7 @@ public class GarageApp extends Application {
     }
 
     private void createApiService() {
-        mApiService = createApiService(getApiServiceEndpoint());
-        mApiToken = getPreferences().getString(API_TOKEN_KEY, Config.API_TOKEN);
+        mApiService = createApiService("https://" + getApiServerHost() + ":" + getApiServerPort());
     }
 
     private OkHttpClient configureClient() {
@@ -99,22 +102,40 @@ public class GarageApp extends Application {
         return mApiService;
     }
 
-    public String getApiServiceEndpoint() {
-        return getPreferences().getString(API_ENDPOINT_KEY, Config.API_ENDPOINT);
+    public String getApiServerHost() {
+        return getPreferences().getString(API_SERVER_HOST_KEY, DEFAULT_SERVER_HOST);
     }
 
-    public void updateApiServiceEndpoint(String endpoint, String token) {
-        final SharedPreferences prefs = getPreferences();
-        prefs.edit()
-                .putString(API_ENDPOINT_KEY, endpoint)
-                .putString(API_TOKEN_KEY, token)
+    public int getApiServerPort() {
+        return getPreferences().getInt(API_SERVER_PORT_KEY, DEFAULT_SERVER_PORT);
+    }
+
+    public String getApiToken() {
+        return getPreferences().getString(API_TOKEN_KEY, DEFAULT_API_TOKEN);
+    }
+
+    public void setApiServerHost(String host) {
+        getPreferences().edit()
+                .putString(API_SERVER_HOST_KEY, host)
                 .apply();
 
         createApiService();
     }
 
-    public String getApiToken() {
-        return mApiToken;
+    public void setApiServerPort(int port) {
+        getPreferences().edit()
+                .putInt(API_SERVER_PORT_KEY, port)
+                .apply();
+
+        createApiService();
+    }
+
+    public void setApiToken(String token) {
+        getPreferences().edit()
+                .putString(API_TOKEN_KEY, token)
+                .apply();
+
+        createApiService();
     }
 
     public int getCurrentStatus() {

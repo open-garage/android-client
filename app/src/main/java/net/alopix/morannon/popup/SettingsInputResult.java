@@ -11,11 +11,9 @@ package net.alopix.morannon.popup;
  * Created by dustin on 08/12/14.
  */
 public class SettingsInputResult {
-    public final String url;
-    public final String token;
+    public final String value;
 
-    public SettingsInputResult(String url, String token) {
-        this.url = url;
-        this.token = token;
+    public SettingsInputResult(String value) {
+        this.value = value;
     }
 }

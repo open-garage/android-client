@@ -14,14 +14,18 @@ import android.os.Parcelable;
  * Created by dustin on 08/12/14.
  */
 public class SettingsInput implements Parcelable {
-    public final int id;
-    public final String url;
-    public final String token;
+    public final String title;
+    public final String value;
+    public final boolean isNumber;
 
-    public SettingsInput(int id, String url, String token) {
-        this.id = id;
-        this.url = url;
-        this.token = token;
+    public SettingsInput(String title, String value, boolean isNumber) {
+        this.title = title;
+        this.value = value;
+        this.isNumber = isNumber;
+    }
+
+    public SettingsInput(String title, String value) {
+        this(title, value, false);
     }
 
     @Override
@@ -31,18 +35,17 @@ public class SettingsInput implements Parcelable {
 
         SettingsInput that = (SettingsInput) o;
 
-        return id == that.id
-                && url.equals(that.url)
-                && token.equals(that.token);
+        return title.equals(that.title)
+                && value.equals(that.value);
     }
 
     private static final int HASH_PRIME = 31;
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = HASH_PRIME * result + url.hashCode();
-        result = HASH_PRIME * result + token.hashCode();
+        int result = 1;
+        result = HASH_PRIME * result + title.hashCode();
+        result = HASH_PRIME * result + value.hashCode();
         return result;
     }
 
@@ -53,16 +56,16 @@ public class SettingsInput implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(url);
-        parcel.writeString(token);
+        parcel.writeString(title);
+        parcel.writeString(value);
+        parcel.writeInt(isNumber ? 1 : 0);
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public static final Creator<SettingsInput> CREATOR = new Creator<SettingsInput>() {
         @Override
         public SettingsInput createFromParcel(Parcel parcel) {
-            return new SettingsInput(parcel.readInt(), parcel.readString(), parcel.readString());
+            return new SettingsInput(parcel.readString(), parcel.readString(), parcel.readInt() == 1);
         }
 
         @Override

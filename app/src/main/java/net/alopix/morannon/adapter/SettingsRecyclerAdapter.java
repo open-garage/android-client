@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.alopix.morannon.R;
+import net.alopix.morannon.model.ClickableSettingItem;
 import net.alopix.morannon.model.SettingItem;
 
 import butterknife.ButterKnife;
@@ -23,8 +24,8 @@ import butterknife.InjectView;
  * Created by dustin on 03.12.2014.
  */
 public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, SettingsRecyclerAdapter.ViewHolder> {
-    private static final int TYPE_CLICKABLE = 0;
-    private static final int TYPE_DEFAULT = 1;
+    private static final int TYPE_DEFAULT = 0;
+    private static final int TYPE_CLICKABLE = 1;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -44,12 +45,27 @@ public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, Se
 
     @Override
     public int getItemViewType(int position) {
-        return getItem(position).isClickable() ? TYPE_CLICKABLE : TYPE_DEFAULT;
+        SettingItem item = getItem(position);
+        if (item instanceof ClickableSettingItem) {
+            return TYPE_CLICKABLE;
+        } else {
+            return TYPE_DEFAULT;
+        }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(getItemViewType(i) == TYPE_DEFAULT ? R.layout.list_item_setting : R.layout.list_item_clickable_setting, viewGroup, false);
+        int layoutRes;
+        switch (getItemViewType(i)) {
+            case TYPE_DEFAULT:
+                layoutRes = R.layout.list_item_clickable_setting;
+                break;
+
+            default:
+                layoutRes = R.layout.list_item_setting;
+                break;
+        }
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutRes, viewGroup, false);
         return new ViewHolder(view, this);
     }
 
@@ -58,7 +74,12 @@ public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, Se
         final SettingItem item = getItem(i);
 
         viewHolder.title.setText(item.getTitle());
-        viewHolder.description.setText(item.getDescription());
+        if (item.getDescription() == null || item.getDescription().isEmpty()) {
+            viewHolder.description.setVisibility(View.GONE);
+        } else {
+            viewHolder.description.setText(item.getDescription());
+            viewHolder.description.setVisibility(View.VISIBLE);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -66,7 +87,6 @@ public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, Se
 
         @InjectView(R.id.title_label)
         TextView title;
-
         @InjectView(R.id.description_label)
         TextView description;
 
