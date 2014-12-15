@@ -15,3 +15,44 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# appcompat v7
+-keep class android.support.v7.internal.** { *; }
+-keep interface android.support.v7.internal.** { *; }
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+-keep public class * extends android.support.v7.app.ActionBarActivity { *; }
+-keep class android.support.v7.widget.** { *; }
+
+# butterknife
+-dontwarn butterknife.internal.**
+-keep class **$$ViewInjector { *; }
+-keepnames class * { @butterknife.InjectView *;}
+
+# retrofit
+-keep class retrofit.** { *; }
+
+# gson
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+# morannon
+#-keep class net.alopix.morannon.** { *; }
+
+# net.alopix
+-keep class net.alopix.util.** { *; }
+
+# okhttp
+-keep class com.squareup.okhttp.** { *; }
+
+# flow
+-keep class flow.** { *; }
+
+# circular-progress-button
+-keep class com.dd.** { *; }
+
+# rippleeffect
+-keep class com.andexert.library.** { *; }
