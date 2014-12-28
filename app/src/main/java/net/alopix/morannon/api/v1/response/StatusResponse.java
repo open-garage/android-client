@@ -27,6 +27,6 @@ public abstract class StatusResponse {
     }
 
     public boolean isSuccess() {
-        return mStatus == STATUS_OK;
+        return mStatus >= STATUS_OK;
     }
 }
