@@ -17,6 +17,8 @@
         android:id="@+id/title_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
         tools:text="Setting Title"
         style="@style/Base.TextAppearance.AppCompat.Body1"/>
 
@@ -25,6 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:singleLine="true"
+        android:ellipsize="end"
         tools:text="Setting Description"
         style="@style/Base.TextAppearance.AppCompat.Caption"/>
 </LinearLayout>
