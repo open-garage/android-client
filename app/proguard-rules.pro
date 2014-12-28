@@ -32,6 +32,7 @@
 
 # retrofit
 -keep class retrofit.** { *; }
+-dontwarn rx.**
 
 # gson
 -keepattributes Signature
@@ -56,3 +57,7 @@
 
 # rippleeffect
 -keep class com.andexert.library.** { *; }
+
+# okhttp
+-dontwarn com.squareup.okhttp.**
+-dontwarn okio.**
