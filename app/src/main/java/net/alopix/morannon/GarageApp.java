@@ -10,7 +10,6 @@ package net.alopix.morannon;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,13 +20,6 @@ import net.alopix.morannon.api.v1.request.ToggleRequest;
 import net.alopix.morannon.service.GarageService;
 import net.alopix.morannon.util.FlowBundler;
 import net.alopix.util.SelfSignedCertHelper;
-
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.Region;
-import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
-import org.altbeacon.beacon.startup.BootstrapNotifier;
 
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +36,7 @@ import retrofit.converter.GsonConverter;
 /**
  * Created by dustin on 01.12.2014.
  */
-public class GarageApp extends Application implements BootstrapNotifier, BeaconConsumer {
+public class GarageApp extends Application {
     private static final String TAG = GarageApp.class.getSimpleName();
 
     private static final String API_SERVER_HOST_KEY = "api_server_host_key";
@@ -67,9 +59,6 @@ public class GarageApp extends Application implements BootstrapNotifier, BeaconC
     };
 
     private OpenGarageService mApiService;
-
-    private BeaconManager mBeaconManager;
-    private BackgroundPowerSaver mBeaconPowerSaver;
 
     @Override
     public void onCreate() {
@@ -115,11 +104,7 @@ public class GarageApp extends Application implements BootstrapNotifier, BeaconC
     }
 
     private void initBeaconManager() {
-        mBeaconManager = BeaconManager.getInstanceForApplication(this);
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-        mBeaconManager.bind(this);
-
-        mBeaconPowerSaver = new BackgroundPowerSaver(this);
+        // TODO
     }
 
     public FlowBundler getFlowBundler() {
@@ -176,32 +161,5 @@ public class GarageApp extends Application implements BootstrapNotifier, BeaconC
 
     private SharedPreferences getPreferences() {
         return getSharedPreferences(GarageApp.class.getSimpleName(), MODE_PRIVATE);
-    }
-
-    @Override
-    public void onBeaconServiceConnect() {
-        Log.d(TAG, "onBeaconServiceConnected");
-
-        mBeaconManager.setMonitorNotifier(this);
-        try {
-            mBeaconManager.startMonitoringBeaconsInRegion(new Region("OpenGarageMonitor", null, null, null));
-        } catch (Exception ex) {
-            Log.d(TAG, "Could not start monitoring", ex);
-        }
-    }
-
-    @Override
-    public void didEnterRegion(Region region) {
-        Log.i(TAG, "didEnterRegion: " + region);
-    }
-
-    @Override
-    public void didExitRegion(Region region) {
-        Log.i(TAG, "didExitRegion: " + region);
-    }
-
-    @Override
-    public void didDetermineStateForRegion(int i, Region region) {
-        Log.i(TAG, "didDetermineStateForRegion: " + i + ", " + region);
     }
 }
