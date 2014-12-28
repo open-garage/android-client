@@ -24,10 +24,6 @@ import retrofit.http.POST;
 public interface OpenGarageService {
     static final String BASE_PATH = "/api/v1";
 
-    public static final int DOOR_OPEN = 0;
-    public static final int DOOR_CLOSED = 1;
-    public static final int STATUS_ERROR = -1;
-
     @GET(BASE_PATH + "/")
     void systemInfos(Callback<SystemInfosResponse> cb);
 

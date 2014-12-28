@@ -19,7 +19,6 @@ import android.widget.RemoteViews;
 
 import net.alopix.morannon.GarageApp;
 import net.alopix.morannon.R;
-import net.alopix.morannon.api.v1.OpenGarageService;
 import net.alopix.morannon.api.v1.request.ToggleRequest;
 import net.alopix.morannon.api.v1.response.ToggleResponse;
 import net.alopix.morannon.appwidget.GarageAppWidgetProvider;
@@ -30,16 +29,15 @@ import net.alopix.morannon.appwidget.GarageAppWidgetProvider;
 public class GarageService extends IntentService {
     private static final String TAG = GarageService.class.getSimpleName();
 
+    public static final String ARG_DIRECTION = "arg_direction";
+
     public static final String ACTION_TOGGLE_GARAGE_STATUS = "action_toggle_garage_status";
-    public static final String EXTRA_STATUS = "extra_status";
     public static final String EXTRA_PROGRESS = "extra_progress";
 
     public static final int PROGRESS_IDLE = 0;
     public static final int PROGRESS_LOADING = 50;
     public static final int PROGRESS_SUCCESS = 100;
     public static final int PROGRESS_ERROR = -1;
-
-    private Integer mStatus;
 
     /**
      * Creates an IntentService. Invoked by your subclass's constructor.
@@ -52,10 +50,11 @@ public class GarageService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "onHandleIntent: " + intent);
 
+        ToggleRequest.State direction = ToggleRequest.State.values()[intent.getIntExtra(ARG_DIRECTION, ToggleRequest.State.TOGGLE.ordinal())];
+
         setProgress(PROGRESS_LOADING);
         try {
-            ToggleResponse toggleResponse = ((GarageApp) getApplicationContext()).getApiService().toggleSync(new ToggleRequest(ToggleRequest.State.TOGGLE, ((GarageApp) getApplicationContext()).getApiToken()));
-            setStatus(toggleResponse == null ? OpenGarageService.STATUS_ERROR : toggleResponse.getStatus());
+            ToggleResponse toggleResponse = ((GarageApp) getApplicationContext()).getApiService().toggleSync(new ToggleRequest(direction, ((GarageApp) getApplicationContext()).getApiToken()));
             if (toggleResponse == null || !toggleResponse.isSuccess()) {
                 Log.d(TAG, "Toggle Garage System (ERROR)!");
                 setProgress(PROGRESS_ERROR);
@@ -65,7 +64,6 @@ public class GarageService extends IntentService {
             }
         } catch (Exception ex) {
             Log.d(TAG, "Toggle Garage System (ERROR)!");
-            setStatus(OpenGarageService.STATUS_ERROR);
             setProgress(PROGRESS_ERROR);
         }
     }
@@ -77,22 +75,15 @@ public class GarageService extends IntentService {
         super.onDestroy();
     }
 
-    private void setStatus(int status) {
-        mStatus = status;
-    }
-
     private void setProgress(int progress) {
         ((GarageApp) getApplicationContext()).setCurrentProgress(progress);
 
         final LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
         Intent intent = new Intent(ACTION_TOGGLE_GARAGE_STATUS);
-        if (mStatus != null) {
-            intent.putExtra(EXTRA_STATUS, mStatus);
-        }
         intent.putExtra(EXTRA_PROGRESS, progress);
         broadcastManager.sendBroadcast(intent);
 
-        String message = GarageAppWidgetProvider.getToggleString(getApplicationContext(), mStatus, progress);
+        String message = GarageAppWidgetProvider.getToggleString(getApplicationContext(), progress);
         boolean loading = progress == PROGRESS_LOADING;
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());

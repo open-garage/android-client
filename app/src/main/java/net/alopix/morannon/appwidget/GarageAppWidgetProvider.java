@@ -14,14 +14,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import net.alopix.morannon.GarageApp;
 import net.alopix.morannon.R;
-import net.alopix.morannon.api.v1.OpenGarageService;
 import net.alopix.morannon.service.GarageService;
 
 /**
@@ -37,7 +35,6 @@ public class GarageAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        int status = ((GarageApp) context.getApplicationContext()).getCurrentStatus();
         int progress = ((GarageApp) context.getApplicationContext()).getCurrentProgress();
 
         boolean loading = progress == GarageService.PROGRESS_LOADING;
@@ -51,7 +48,7 @@ public class GarageAppWidgetProvider extends AppWidgetProvider {
                 pendingIntent = PendingIntent.getService(context, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
             remoteViews.setOnClickPendingIntent(R.id.toggle_button, pendingIntent);
-            remoteViews.setTextViewText(R.id.toggle_button, getToggleString(context, status, progress));
+            remoteViews.setTextViewText(R.id.toggle_button, getToggleString(context, progress));
             remoteViews.setViewVisibility(R.id.progress_view, loading ? View.VISIBLE : View.INVISIBLE);
 
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
@@ -59,18 +56,9 @@ public class GarageAppWidgetProvider extends AppWidgetProvider {
     }
 
     @StringRes
-    private static int getToggleStringRes(@Nullable Integer status, int progress) {
+    private static int getToggleStringRes(int progress) {
         switch (progress) {
             case GarageService.PROGRESS_IDLE:
-                if (status != null) {
-                    switch (status) {
-                        case OpenGarageService.DOOR_OPEN:
-                            return R.string.appwidget_toggle_door_idle_close;
-
-                        case OpenGarageService.DOOR_CLOSED:
-                            return R.string.appwidget_toggle_door_idle_open;
-                    }
-                }
                 return R.string.appwidget_toggle_door_idle;
 
             case GarageService.PROGRESS_LOADING:
@@ -84,7 +72,7 @@ public class GarageAppWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public static String getToggleString(@NonNull Context context, @Nullable @StringRes Integer status, @StringRes int progress) {
-        return context.getString(getToggleStringRes(status, progress));
+    public static String getToggleString(@NonNull Context context, @StringRes int progress) {
+        return context.getString(getToggleStringRes(progress));
     }
 }

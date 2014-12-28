@@ -60,10 +60,6 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(GarageService.ACTION_TOGGLE_GARAGE_STATUS)) {
-                if (intent.hasExtra(GarageService.EXTRA_STATUS)) {
-                    int status = intent.getIntExtra(GarageService.EXTRA_STATUS, OpenGarageService.STATUS_ERROR);
-                    mToggleButton.setIdleText(getIdleString(status));
-                }
                 if (intent.hasExtra(GarageService.EXTRA_PROGRESS)) {
                     int progress = intent.getIntExtra(GarageService.EXTRA_PROGRESS, GarageService.PROGRESS_IDLE);
                     mToggleButton.setProgress(progress);
@@ -97,7 +93,7 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
 
             @Override
             public void failure(RetrofitError error) {
-                mToggleButton.setIdleText(getIdleString(OpenGarageService.STATUS_ERROR));
+                mToggleButton.setIdleText(getIdleString(DoorStatusResponse.STATUS_TOKEN_ERROR));
                 startButtonReset();
             }
         });
@@ -110,10 +106,10 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
     @StringRes
     private int getIdleStringRes(int status) {
         switch (status) {
-            case OpenGarageService.DOOR_OPEN:
+            case DoorStatusResponse.STATUS_OPEN:
                 return R.string.toggle_door_idle_close;
 
-            case OpenGarageService.DOOR_CLOSED:
+            case DoorStatusResponse.STATUS_CLOSED:
                 return R.string.toggle_door_idle_open;
 
             default:

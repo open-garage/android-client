@@ -45,7 +45,6 @@ public class GarageApp extends Application {
     private static final String DEFAULT_API_TOKEN = "A";
 
     private static final String CURRENT_PROGRESS_KEY = "current_progress_key";
-    private static final String CURRENT_STATUS_KEY = "current_status_key";
 
     private static final int HTTP_TIMEOUT = 15;
 
@@ -142,14 +141,6 @@ public class GarageApp extends Application {
                 .apply();
 
         createApiService();
-    }
-
-    public int getCurrentStatus() {
-        return getPreferences().getInt(CURRENT_STATUS_KEY, GarageService.PROGRESS_IDLE);
-    }
-
-    public void setCurrentStatus(int status) {
-        getPreferences().edit().putInt(CURRENT_STATUS_KEY, status).apply();
     }
 
     public int getCurrentProgress() {
