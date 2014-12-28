@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
 
@@ -29,6 +30,7 @@ import net.alopix.morannon.R;
 import net.alopix.morannon.api.v1.OpenGarageService;
 import net.alopix.morannon.api.v1.request.DoorStatusRequest;
 import net.alopix.morannon.api.v1.response.DoorStatusResponse;
+import net.alopix.morannon.api.v1.response.ToggleResponse;
 import net.alopix.morannon.service.GarageService;
 
 import butterknife.ButterKnife;
@@ -68,6 +70,8 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
         }
     };
 
+    @InjectView(R.id.door_status_label)
+    TextView mDoorStatusLabel;
     @InjectView(R.id.toggle_button)
     CircularProgressButton mToggleButton;
 
@@ -85,40 +89,46 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
-        ((GarageApp) getContext().getApplicationContext()).getApiService().doorStatus(new DoorStatusRequest(((GarageApp) getContext().getApplicationContext()).getApiToken()), new Callback<DoorStatusResponse>() {
-            @Override
-            public void success(DoorStatusResponse toggleResponse, Response response) {
-                mToggleButton.setIdleText(getIdleString(toggleResponse.getStatus()));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                mToggleButton.setIdleText(getIdleString(DoorStatusResponse.STATUS_TOKEN_ERROR));
-                startButtonReset();
-            }
-        });
+        loadDoorState();
 
         mToggleButton.setIndeterminateProgressMode(true);
 
         mToggleButton.setProgress(((GarageApp) getContext().getApplicationContext()).getCurrentProgress());
     }
 
-    @StringRes
-    private int getIdleStringRes(int status) {
-        switch (status) {
-            case DoorStatusResponse.STATUS_OPEN:
-                return R.string.toggle_door_idle_close;
+    private void loadDoorState() {
+        mDoorStatusLabel.setText(R.string.door_state_loading);
 
-            case DoorStatusResponse.STATUS_CLOSED:
-                return R.string.toggle_door_idle_open;
+        ((GarageApp) getContext().getApplicationContext()).getApiService().doorStatus(new DoorStatusRequest(((GarageApp) getContext().getApplicationContext()).getApiToken()), new Callback<DoorStatusResponse>() {
+            @Override
+            public void success(DoorStatusResponse statusResponse, Response response) {
+                mDoorStatusLabel.setText(getDoorStatusString(statusResponse.getStatus()));
+            }
 
-            default:
-                return R.string.toggle_door_idle;
-        }
+            @Override
+            public void failure(RetrofitError error) {
+                mDoorStatusLabel.setText(getDoorStatusString(DoorStatusResponse.STATUS_TOKEN_ERROR));
+                startButtonReset();
+            }
+        });
     }
 
-    private String getIdleString(@StringRes int status) {
-        return getContext().getString(getIdleStringRes(status));
+    private String getDoorStatusString(int status) {
+        String statusStr;
+        switch (status) {
+            case DoorStatusResponse.STATUS_CLOSED:
+                statusStr = getContext().getString(R.string.door_closed);
+                break;
+
+            case DoorStatusResponse.STATUS_OPEN:
+                statusStr = getContext().getString(R.string.door_open);
+                break;
+
+            default:
+                statusStr = getContext().getString(R.string.door_state_unavailable);
+                break;
+        }
+        return getContext().getString(R.string.door_state, statusStr);
     }
 
     @Override
@@ -168,6 +178,10 @@ public class ToggleView extends FrameLayout implements HandlesOptionsMenu {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_refresh_state:
+                loadDoorState();
+                return true;
+
             case R.id.action_settings:
                 openSettings();
                 return true;

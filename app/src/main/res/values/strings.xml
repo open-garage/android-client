@@ -16,6 +16,12 @@
     <string name="toggle_door_complete">Success</string>
     <string name="toggle_door_error">Error</string>
 
+    <string name="door_state">Door state: %1$s</string>
+    <string name="door_state_loading">Door state: Loading…</string>
+    <string name="door_closed">Closed</string>
+    <string name="door_open">Open</string>
+    <string name="door_state_unavailable">Unavailable</string>
+
     <string name="appwidget_toggle_door_idle_open">Open Door</string>
     <string name="appwidget_toggle_door_idle_close">Close Door</string>
     <string name="appwidget_toggle_door_idle">Open/Close</string>

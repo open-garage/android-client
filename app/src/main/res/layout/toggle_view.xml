@@ -7,21 +7,37 @@
   -->
 
 <net.alopix.morannon.view.ToggleView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toggle_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                     android:id="@+id/toggle_view"
+                                     android:layout_width="match_parent"
+                                     android:layout_height="match_parent">
 
-    <com.dd.CircularProgressButton
-        android:id="@+id/toggle_button"
-        android:layout_width="196dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:cpb_cornerRadius="48dp"
-        app:cpb_textIdle="@string/toggle_door_idle"
-        app:cpb_textComplete="@string/toggle_door_complete"
-        app:cpb_textError="@string/toggle_door_error"
-        app:cpb_colorProgress="@color/primary_dark"
-        app:cpb_colorIndicator="@color/accent" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/door_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            style="@style/TextAppearance.AppCompat.Body1"/>
+
+        <com.dd.CircularProgressButton
+            android:id="@+id/toggle_button"
+            android:layout_width="196dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cpb_cornerRadius="48dp"
+            app:cpb_textIdle="@string/toggle_door_idle"
+            app:cpb_textComplete="@string/toggle_door_complete"
+            app:cpb_textError="@string/toggle_door_error"
+            app:cpb_colorProgress="@color/primary_dark"
+            app:cpb_colorIndicator="@color/accent"/>
+    </LinearLayout>
 
 </net.alopix.morannon.view.ToggleView>
