@@ -12,9 +12,11 @@ import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 
 import net.alopix.morannon.api.v1.OpenGarageService;
+import net.alopix.morannon.api.v1.request.ToggleRequest;
 import net.alopix.morannon.service.GarageService;
 import net.alopix.morannon.util.FlowBundler;
 import net.alopix.util.SelfSignedCertHelper;
@@ -28,6 +30,7 @@ import javax.net.ssl.SSLSocketFactory;
 import flow.Backstack;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
+import retrofit.converter.GsonConverter;
 
 /**
  * Created by dustin on 01.12.2014.
@@ -69,6 +72,9 @@ public class GarageApp extends Application {
                 .setEndpoint(endpoint)
                 .setClient(new OkClient(client))
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+                .setConverter(new GsonConverter(new GsonBuilder()
+                        .registerTypeAdapter(ToggleRequest.State.class, new ToggleRequest.StateSerializer())
+                        .create()))
                 .build();
         return adapter.create(OpenGarageService.class);
     }

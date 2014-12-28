@@ -54,7 +54,7 @@ public class GarageService extends IntentService {
 
         setProgress(PROGRESS_LOADING);
         try {
-            ToggleResponse toggleResponse = ((GarageApp) getApplicationContext()).getApiService().toggleSync(new ToggleRequest(((GarageApp) getApplicationContext()).getApiToken()));
+            ToggleResponse toggleResponse = ((GarageApp) getApplicationContext()).getApiService().toggleSync(new ToggleRequest(ToggleRequest.State.TOGGLE, ((GarageApp) getApplicationContext()).getApiToken()));
             setStatus(toggleResponse == null ? OpenGarageService.STATUS_ERROR : toggleResponse.getStatus());
             if (toggleResponse == null || !toggleResponse.isSuccess()) {
                 Log.d(TAG, "Toggle Garage System (ERROR)!");
