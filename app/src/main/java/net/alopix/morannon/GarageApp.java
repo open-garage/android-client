@@ -9,8 +9,15 @@ package net.alopix.morannon;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.estimote.sdk.Beacon;
+import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.Region;
+import com.estimote.sdk.utils.L;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -21,6 +28,7 @@ import net.alopix.morannon.service.GarageService;
 import net.alopix.morannon.util.FlowBundler;
 import net.alopix.util.SelfSignedCertHelper;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -59,6 +67,8 @@ public class GarageApp extends Application {
     };
 
     private OpenGarageService mApiService;
+
+    private BeaconManager mBeaconManager;
 
     @Override
     public void onCreate() {
@@ -104,7 +114,38 @@ public class GarageApp extends Application {
     }
 
     private void initBeaconManager() {
-        // TODO
+        mBeaconManager = new BeaconManager(this);
+        mBeaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
+            @Override
+            public void onEnteredRegion(Region region, List<Beacon> beacons) {
+                Log.d(TAG, "Entered region " + region);
+                Toast.makeText(GarageApp.this, "Entered region " + region, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onExitedRegion(Region region) {
+                Log.d(TAG, "Exited region " + region);
+                Toast.makeText(GarageApp.this, "Exited region " + region, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        if (mBeaconManager.hasBluetooth()) {
+            mBeaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+                @Override
+                public void onServiceReady() {
+                    try {
+                        mBeaconManager.startMonitoring(getBeaconRegion());
+                    } catch (RemoteException ex) {
+                        Log.e(TAG, "Could not start monitoring", ex);
+                    }
+                }
+            });
+        }
+    }
+
+    private Region getBeaconRegion() {
+        // TODO: load from settings
+        return new Region("OpenGarageRegion", "649F1C4B-8EF1-4E5C-A99E-81470F515FF9", null, null);
     }
 
     public FlowBundler getFlowBundler() {
