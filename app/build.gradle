@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22"
 
     defaultConfig {
         applicationId "net.alopix.morannon"
         minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 3
-        versionName "2014-12-29"
+        targetSdkVersion 22
+        versionCode 4
+        versionName "2015-03-27"
     }
 
     compileOptions {
@@ -35,15 +35,15 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile('com.android.support:appcompat-v7:21.0.3')
-    compile('com.android.support:recyclerview-v7:21.0.2')
+    compile('com.android.support:appcompat-v7:22.0.0')
+    compile('com.android.support:recyclerview-v7:22.0.0')
 
-    compile('com.jakewharton:butterknife:6.0.0')
+    compile('com.jakewharton:butterknife:6.1.0')
 
     compile('com.squareup.okhttp:okhttp-urlconnection:2.0.0')
     compile('com.squareup.okhttp:okhttp:2.0.0')
 
-    compile('com.squareup.retrofit:retrofit:2.0.0-SNAPSHOT')
+    compile('com.squareup.retrofit:retrofit:1.9.0')
 
     // TODO: in libs untill 0.9 is released!
     //compile('com.squareup.flow:flow:0.9')
