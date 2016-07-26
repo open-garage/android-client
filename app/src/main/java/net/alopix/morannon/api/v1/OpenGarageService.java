@@ -13,30 +13,24 @@ import net.alopix.morannon.api.v1.response.DoorStatusResponse;
 import net.alopix.morannon.api.v1.response.SystemInfosResponse;
 import net.alopix.morannon.api.v1.response.ToggleResponse;
 
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 /**
  * Created by dustin on 01.12.2014.
  */
 public interface OpenGarageService {
-    static final String BASE_PATH = "/api/v1";
+	String BASE_PATH = "/api/v1";
 
-    @GET(BASE_PATH + "/")
-    void systemInfos(Callback<SystemInfosResponse> cb);
+	@GET(BASE_PATH + "/")
+	Call<SystemInfosResponse> systemInfos();
 
-    @POST(BASE_PATH + "/toggle")
-    void toggle(@Body ToggleRequest request, Callback<DoorStatusResponse> cb);
+	@POST(BASE_PATH + "/toggle")
+	Call<ToggleResponse> toggle(@Body ToggleRequest request);
 
-
-    @POST(BASE_PATH + "/toggle")
-    ToggleResponse toggleSync(@Body ToggleRequest request);
-
-    @POST(BASE_PATH + "/status")
-    void doorStatus(@Body DoorStatusRequest request, Callback<DoorStatusResponse> cb);
-
-    @POST(BASE_PATH + "/status")
-    DoorStatusResponse doorStatusSync(@Body DoorStatusRequest request);
+	@POST(BASE_PATH + "/status")
+	Call<DoorStatusResponse> doorStatus(@Body DoorStatusRequest request);
 }

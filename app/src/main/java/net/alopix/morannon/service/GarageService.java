@@ -23,6 +23,9 @@ import net.alopix.morannon.api.v1.request.ToggleRequest;
 import net.alopix.morannon.api.v1.response.ToggleResponse;
 import net.alopix.morannon.appwidget.GarageAppWidgetProvider;
 
+import okhttp3.Request;
+import retrofit2.Response;
+
 /**
  * Created by dustin on 04.12.2014.
  */
@@ -54,8 +57,8 @@ public class GarageService extends IntentService {
 
         setProgress(PROGRESS_LOADING);
         try {
-            ToggleResponse toggleResponse = ((GarageApp) getApplicationContext()).getApiService().toggleSync(new ToggleRequest(direction, ((GarageApp) getApplicationContext()).getApiToken()));
-            if (toggleResponse == null || !toggleResponse.isSuccess()) {
+            Response<ToggleResponse> toggleResponse = ((GarageApp) getApplicationContext()).getApiService().toggle(new ToggleRequest(direction, ((GarageApp) getApplicationContext()).getApiToken())).execute();
+            if (toggleResponse == null || !toggleResponse.body().isSuccess()) {
                 Log.d(TAG, "Toggle Garage System (ERROR)!");
                 setProgress(PROGRESS_ERROR);
             } else {

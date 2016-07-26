@@ -19,8 +19,8 @@ import android.widget.TextView;
 
 import net.alopix.morannon.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 /**
@@ -33,9 +33,9 @@ public class SettingsInputPopup {
     private PopupResult<SettingsInput, SettingsInputResult> mPresenter;
     private Dialog mDialog;
 
-    @InjectView(R.id.title_label)
+    @BindView(R.id.title_label)
     TextView mTitleLabel;
-    @InjectView(R.id.value_input)
+    @BindView(R.id.value_input)
     EditText mValueInput;
 
     public SettingsInputPopup(Context context) {
@@ -60,7 +60,7 @@ public class SettingsInputPopup {
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         View view = LayoutInflater.from(mContext).inflate(R.layout.popup_settings_input, null, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mDialog.setContentView(view);
 
         updateContent();

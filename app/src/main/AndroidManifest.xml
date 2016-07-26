@@ -1,35 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.alopix.morannon">
+          package="net.alopix.morannon">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".GarageApp"
         android:allowBackup="true"
-        android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme"
-        android:name=".GarageApp">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.GarageActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_settings"
+            android:parentActivityName=".ui.GarageActivity">
         </activity>
 
         <receiver android:name=".appwidget.GarageAppWidgetProvider">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/garage_appwidget_info" />
+                android:resource="@xml/garage_appwidget_info"/>
         </receiver>
 
+        <service android:name=".service.GarageService"/>
 
-        <service android:name=".service.GarageService" />
+
     </application>
 
 </manifest>

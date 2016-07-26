@@ -18,7 +18,7 @@ import net.alopix.morannon.model.ClickableSettingItem;
 import net.alopix.morannon.model.SettingItem;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by dustin on 03.12.2014.
@@ -85,14 +85,14 @@ public class SettingsRecyclerAdapter extends ArrayRecycleAdapter<SettingItem, Se
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private SettingsRecyclerAdapter mAdapter;
 
-        @InjectView(R.id.title_label)
+        @BindView(R.id.title_label)
         TextView title;
-        @InjectView(R.id.description_label)
+        @BindView(R.id.description_label)
         TextView description;
 
         public ViewHolder(View itemView, SettingsRecyclerAdapter adapter) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
             mAdapter = adapter;
 
             itemView.setOnClickListener(this);
